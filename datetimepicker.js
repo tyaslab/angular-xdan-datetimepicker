@@ -11,9 +11,14 @@ datetimepicker.directive('xdanDatetimepicker', function() {
         },
         template: '<input type="text">',
         link: function(scope, element, attrs, ngModelController) {
-            var DEFAULT_DATE_FORMAT = 'd-m-Y',
-                DEFAULT_TIME_FORMAT = 'H:i',
-                DEFAULT_FORMAT = DEFAULT_DATE_FORMAT + ' ' + DEFAULT_TIME_FORMAT;
+            // The most famous date format in my country ;)
+            var DEFAULT_VIEW_DATE_FORMAT = 'd-m-Y',
+                DEFAULT_VIEW_TIME_FORMAT = 'H:i',
+                DEFAULT_VIEW_FORMAT = DEFAULT_VIEW_DATE_FORMAT + ' ' + DEFAULT_VIEW_TIME_FORMAT,
+
+                DEFAULT_MODEL_DATE_FORMAT = 'Y-m-d',
+                DEFAULT_MODEL_TIME_FORMAT= 'H:i:s',
+                DEFAULT_MODEL_FORMAT = DEFAULT_MODEL_DATE_FORMAT + ' ' + DEFAULT_MODEL_TIME_FORMAT;
 
             if (scope.picker_type_option) {
                 scope.picker_type = scope.picker_type_option;
@@ -25,30 +30,33 @@ datetimepicker.directive('xdanDatetimepicker', function() {
                 scope.view_format = scope.view_format_option;
             } else {
                 if (scope.picker_type == 'date') {
-                    scope.view_format = DEFAULT_DATE_FORMAT;
+                    scope.view_format = DEFAULT_VIEW_DATE_FORMAT;
                 } else if (scope.picker_type == 'time') {
-                    scope.view_format = DEFAULT_TIME_FORMAT;
+                    scope.view_format = DEFAULT_VIEW_TIME_FORMAT;
                 } else {
-                    scope.view_format = DEFAULT_FORMAT;
+                    scope.view_format = DEFAULT_VIEW_FORMAT;
                 }
                 
             }
 
-            if (scope.model_format_option && scope.picker_type != 'datetime') {
+            if (scope.model_format_option && scope.picker_type == 'datetime') {
                 scope.model_format = scope.model_format_option;
             } else {
-                if (scope.picker_type != 'datetime') {
-                    scope.model_format = scope.view_format;
+                if (scope.picker_type == 'date') {
+                    scope.model_format = DEFAULT_MODEL_DATE_FORMAT;
+                } else if (scope.picker_type == 'time') {
+                    scope.model_format = DEFAULT_MODEL_TIME_FORMAT;
                 } else {
-                    scope.model_format = null;
+                    scope.model_format = DEFAULT_MODEL_FORMAT;
                 }
+                
             }
 
             // default options
             // I hate scrollMonth!!!
             scope.options = {
                 scrollMonth: false,
-                format: scope.view_format // The most famous date format in my country ;)
+                format: scope.view_format
             };
             
             if (scope.user_options) {
